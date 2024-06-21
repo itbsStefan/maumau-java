@@ -21,17 +21,35 @@ public class GameController {
     }
 
     // TODO: Methode `getPlayerOnTurn`
+    public int getPlayerOnTurn() {
+        return state.playerOnTurn;
+    }
 
     // TODO: Methode `getNextMustTake`
+    public int getNextMustTake() {
+        return state.nextMustTake;
+    }
 
     // TODO: Methode `getHand`
+    public List<Card> getHand(int player) {
+        return state.hands[player];
+    }
 
     // TODO: Methode `isGameOver`
+    public boolean isGameOver() {
+        for (List<Card> hand : state.hands) {
+            if (hand.size() == 0) return true;
+        }
+        return false;
+    }
 
     public void setup() {
         // TODO: Kartenspiel erzeugen und auf den Nachziehstapel legen
+        state.stock = Card.getDeck();
         // TODO: fünf Karten an jeden Spieler austeilen
+        dealCards(5);
         // TODO: oberte Karte vom Nachziehstapel auf den Ablagestapel legen
+        state.dump.push(state.stock.pop());
     }
 
     public void handleMove(Move move) throws IllegalMoveException {
@@ -40,6 +58,13 @@ public class GameController {
         }
 
         // TODO: passende Methode aufrufen
+        if (move instanceof SkipMove) {
+            handleSkipMove((SkipMove) move);
+        } else if (move instanceof PlayMove) {
+            handlePlayMove((PlayMove) move);
+        } else if (move instanceof TakeMove) {
+            handleTakeMove((TakeMove) move);
+        }
     }
 
     private void takeCard(int player, Card card) {
