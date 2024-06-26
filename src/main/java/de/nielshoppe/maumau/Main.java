@@ -15,8 +15,21 @@ public class Main {
 
     public static void main(String[] args) {
         System.out.println("Let's play Mau-Mau!");
+        if(args.length>0) {
+            Character c = args[0].charAt(0);
+            int max = args[0].length();
+            if( max > 10 )
+                max = 9;
+            String spieler1 = c.toString().toUpperCase() + args[0].substring(1, max);
+            args = new String[]{ spieler1,"NPC1", "npc2" };
+        }else{
+            args = new String[]{"Player A", "Player B"};
+        }
+        run_a_game(args);
+    }
 
-        Game game = new Game(new String[]{ "Player A", "Player B" });
+    static void run_a_game(String[] names) {
+        Game game = new Game(names);
         GameController gameCtrl = new GameController(game);
         gameCtrl.setup();
 
@@ -30,7 +43,7 @@ public class Main {
                         player, playerNo,
                         gameCtrl.getHand(playerNo),
                         Math.max(1, gameCtrl.getNextMustTake())
-                        );
+                );
                 System.out.println(move);
                 gameCtrl.handleMove(move);
             } catch (IllegalMoveException e) {
@@ -39,6 +52,7 @@ public class Main {
         } while (!gameCtrl.isGameOver());
 
         System.out.println("Game over!");
+
     }
 
     static Move promptMove (Player player, int playerNo, List<Card> hand, int maxTake) {
